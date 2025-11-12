@@ -189,13 +189,32 @@
     function isInAppBrowser(){
       const ua = navigator.userAgent || navigator.vendor || window.opera || "";
       const hay = ua.toLowerCase();
+      
+      // Debug mode - show user agent if ?debug=true
+      const urlParams = new URLSearchParams(window.location.search);
+      if(urlParams.get('debug') === 'true'){
+        alert('User Agent: ' + ua);
+      }
+      
+      // Comprehensive list of in-app browser identifiers
       const needles = [
-        "instagram","fb_iab","fb4a","fban","fbav","facebook",
-        "tiktok","twitter","line","kakaotalk","snapchat",
-        "micromessenger","wechat","pinterest","reddit",
-        "telegram","linkedin"
+        // TikTok variants
+        "tiktok", "bytedance", "musical_ly", "bytelocale",
+        // Instagram/Facebook
+        "instagram", "fb_iab", "fb4a", "fban", "fbav", "facebook", "messenger",
+        // Other social platforms
+        "twitter", "line", "kakaotalk", "snapchat",
+        "micromessenger", "wechat", "pinterest", "reddit",
+        "telegram", "linkedin", "whatsapp"
       ];
-      return needles.some(n => hay.includes(n));
+      
+      // Check if any needle is in the user agent
+      const hasInAppMarker = needles.some(n => hay.includes(n));
+      
+      // Additional check: if it's NOT Safari/Chrome/Firefox standalone
+      const isStandaloneBrowser = hay.includes('safari') && !hay.includes('instagram') && !hay.includes('fb');
+      
+      return hasInAppMarker;
     }
 
     function showInstructionUI(show){
